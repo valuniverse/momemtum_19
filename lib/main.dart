@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:momemtum_21_2/search_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -163,6 +164,8 @@ class _LinksState extends State<Links> {
                 ),
                 Container(width: 10, height: 0),
                 Icon(Icons.search, color: Colors.brown),
+                SearchWidget()
+
               ],
             ),
             Visibility(
@@ -174,6 +177,68 @@ class _LinksState extends State<Links> {
       ],
     );
   }
+}
+
+class SearchWidget extends StatefulWidget {
+  @override
+  _SearchWidgetState createState() => _SearchWidgetState();
+
+}
+
+class _SearchWidgetState extends State<SearchWidget>{
+  TextEditingController? textFieldController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    textFieldController = TextEditingController(); // controller와 initState, dispose 순서의 차이를 기억하
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    textFieldController!.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250,
+      child: TextField(
+        enabled: true,
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.brown)
+          ),
+          prefixIcon: Icon(Icons.search, color: Colors.brown),
+            suffixIcon: textFieldController!.text.length == 0 ? null :
+            GestureDetector(
+              child: FaIcon(FontAwesomeIcons.google, color: Colors.brown),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(searchText: textFieldController!.text)));
+              },
+            )
+
+        ),
+        controller: textFieldController,
+        cursorColor: Colors.brown,
+        onChanged: (value){
+          setState(() {
+            // print(textFieldController!.text);
+          });
+        },
+        onSubmitted: (value){  // enter 했을 때의 동작이다.
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(searchText: textFieldController!.text)));
+        },
+      ),
+    );
+  }
+
 }
 
 class LinksBox extends StatelessWidget {
